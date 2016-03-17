@@ -1,17 +1,38 @@
 <html>
 <head>
 <script type="text/javascript" src="scripts/jquery-1.12.1.min.js"></script>
+<script type="text/javascript" src="scripts/jquery-ui.js"></script>
 <script type="text/javascript" src="scripts/flickrGetPhotos.js"></script>
+<link href="style/jquery-ui.css" rel="stylesheet"></link>
 </head>
 <body>
 <div>
-	<form action="" method="GET">
 		<br/>
 		<label>City name</label>
 		<input type="text" name="city" id="inputCity"></input>
-		<br/>
-		<button type="submit" name="submit" value="submit" id="submitCity"></button>
-	</form>
+                <br/>
+                <label>Number of images</label>
+                <input type="number" id="nbImages"></input>
+                <br/>
+                <select id="quality">
+                    <option type="text" value="m">medium</option>
+                    <option type="text" value="z">high</option>
+                </select>
+		<button type="submit" name="submit" value="submit" id="submitCity">GO</button>
+            </div>
+    <div id="tabs">
+  <ul>
+    <li><a href="#tabs-1">Vue Photos</a></li>
+    <li><a href="#tabs-2">Vue Table</a></li>
+  </ul>
+  <div id="tabs-1">
+    <div id="images">
+    </div>
+  </div>
+  <div id="tabs-2">
+      <table id="tableImages">
+      </table>
+  </div>
 </div>
 </body>
-
+</html>
