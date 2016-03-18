@@ -9,34 +9,34 @@ $('document').ready(function(){
 
 });
 
-function urlJSON(city){
-	return ("http://api.flickr.com/services/feeds/photos_public.gne?tags="+city+"&tagmode=any&format=json&nojsoncallback=1");
-}
 
 function removeImages(){
-    $("img").remove();
+    $("td").remove();
+    $("tr").remove();
+    $("#images").children().remove();
+    $(".ui-dialog").remove();
 }
 function getJSON (city, numberOfImages, qualityImages){
-  var flickerAPI = urlJSON(city);
-  console.log(flickerAPI);
   $.ajax({
-      flickerAPI,
+      url: "http://api.flickr.com/services/feeds/photos_public.gne",
       type:'GET',
       dataType:'jsonp',
-      //json:'jsoncallback',
+      jsonp:'jsoncallback',
+      data: 'tags='+city+'&tagmode=any&format=json',
       success:function( data) {
-    var i = 0;
+      var i = 0;
       $.each( data.items, function(i, item ) {
          if (i < numberOfImages){ 
             addPic(photo = {
                 link : item.link,
-                medio : item.media,
+                media : item.media,
                 date_taken : item.date_taken,
                 author: item.author,
                 author_id: item.author_id,
                 title: item.title,
                 published: item.published,
                 description: item.description,
+	    	id: i,
                 quality: qualityImages});
         i++;
       }
@@ -50,8 +50,10 @@ function getJSON (city, numberOfImages, qualityImages){
 
 function addPic(photo){
     $("<img>").attr("src",photo.media.m.replace("_m.","_"+photo.quality+".")).attr("id",photo.id).appendTo("#images");
-    $("<img>").attr("src", photo.media.m.replace("_m.","_q.")).appendTo($("#tableImages")).wrap('<tr id =\"'+photo.secret+'\">').wrap('<td>');
-    $('<td>salut</td>').appendTo("#"+photo.secret);
+    $("<img>").attr("src", photo.media.m.replace("_m.","_q.")).appendTo($("#tableImages")).wrap('<tr id =\"'+photo.id+1000+'\">').wrap('<td>');
+    $('<td>'+photo.title+'</td>').appendTo("#"+photo.id+1000);
+    $('<td>'+photo.date_taken+'</td>').appendTo("#"+photo.id+1000);
+    $('<td>'+photo.author+'</td>').appendTo("#"+photo.id+1000);
     $('</br>').appendTo("#images");
     $('#'+photo.id).on("click",this,function(){
         dialogInformation(photo);
@@ -59,8 +61,6 @@ function addPic(photo){
 }
 
 function dialogInformation(photo){
-    //$('#'+photo.id).dialog({
-        //title: photo.title});
         $('<div>').attr("class","ui-dialog").dialog({
             title: photo.title,
             position:{
