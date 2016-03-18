@@ -1,41 +1,54 @@
 <html>
 <head>
+  <meta charset="utf-8">
+
   <script type="text/javascript" src="scripts/jquery-1.12.1.min.js"></script>
   <script type="text/javascript" src="scripts/jquery-ui.js"></script>
   <script type="text/javascript" src="scripts/flickrGetPhotos.js"></script>
+
   <link href="style/jquery-ui.css" rel="stylesheet"></link>
+  <link href="style/default.css" rel="stylesheet"></link>
 </head>
 <body>
 
-  <div>
-    <label>City name</label>
-    <input type="text" name="city" id="inputCity"></input>
-    <br/>
-    <label>Number of images</label>
-    <input type="number" id="nbImages"></input>
-    <br/>
-    <select id="quality">
-      <option type="text" value="m">medium</option>
-      <option type="text" value="z">high</option>
-    </select>
-    <button type="submit" name="submit" value="submit" id="submitCity">GO</button>
-  </div>
-  <div id="tabs">
-    <ul>
-      <li><a href="#tabs-1">Vue Photos</a></li>
-      <li><a href="#tabs-2">Vue Table</a></li>
-    </ul>
-    <div id="tabs-1">
-      <div id="images">
-        <!-- vue photo -->
+  <main>
+
+    <div class="search">
+      <label class="search__label">City name</label>
+      <input class="search__input" type="text" name="city" id="inputCity"></input>
+      <br/>
+
+      <label class="search__label">Number of images</label>
+      <input class="search__input" type="number" id="nbImages" value="20"></input>
+      <br/>
+
+      <label class="search__label">Quality</label>
+      <select class="search__select" id="quality">
+        <option type="text" value="m">medium</option>
+        <option type="text" value="z">high</option>
+      </select>
+
+      <button class="search__submit" type="submit" name="submit" value="submit" id="submitCity">GO</button>
+    </div>
+
+    <div id="tabs">
+      <ul>
+        <li><a href="#tabs-1">Photos view</a></li>
+        <li><a href="#tabs-2">Table view</a></li>
+      </ul>
+      <div id="tabs-1">
+        <div id="images">
+          <!-- vue photo -->
+        </div>
+      </div>
+      <div id="tabs-2">
+        <table id="tableImages">
+          <!-- vue table -->
+        </table>
       </div>
     </div>
-    <div id="tabs-2">
-      <table id="tableImages">
-        <!-- vue table -->
-      </table>
-    </div>
-  </div>
+
+  </main>
 
 </body>
 </html>

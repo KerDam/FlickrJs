@@ -1,0 +1,29 @@
+main {
+	max-width: 700px;
+	margin: 30px auto;
+
+	font-family: sans-serif, Arial;
+}
+
+.search {
+	padding: 4px 10px;
+	margin-bottom: 30px;
+	border-left: 1px solid #bbb;
+}
+
+	.search__label,
+	.search__input,
+	.search__select,
+	.search__submit {
+		margin: 6px 0;
+		font-size: 16px;
+		color: #333;
+	}
+
+	.search__label::after {
+		content: ' : ';
+	}
+
+#images img {
+	margin-bottom: 20px;
+}
