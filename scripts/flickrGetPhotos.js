@@ -1,5 +1,6 @@
 $('document').ready(function(){
 
+  // onglets
   $('#tabs').tabs();
 
   // auto completion
@@ -23,6 +24,7 @@ $('document').ready(function(){
     }
   });
 
+  // recherche
   $('#submitCity').on("click",this,function(){
     removeImages();
     photos = getJSON($('#inputCity').val(),
@@ -69,14 +71,30 @@ function getJSON (city, numberOfImages, qualityImages){
     data: 'tags='+city+'&tagmode=any&format=json',
     success:function( data) {
       var i = 0;
+      var imgArray = [];
       $.each( data.items, function(i, item ) {
        if (i < numberOfImages){ 
         item.id = i;
         item.quality = qualityImages;
         addPic(item);
+        imgArray.push([ 
+          "<img src ='" + item.media.m.replace("_m.","_q.") + "''>", 
+          item.title, 
+          item.date_taken, 
+          item.author
+        ]);
         i++;
-      }
-    });
+        }
+      });
+      $('#tableImages').DataTable({
+        data: imgArray,
+        columns: [
+          { title: "Photo"},
+          { title: "Name"},
+          { title: "Date"},
+          { title: "Author"}
+        ]
+      });
     },
     error:function(){
       alert("fail");
@@ -100,11 +118,11 @@ function getJSON (city, numberOfImages, qualityImages){
 */
 function addPic(photo){
   $("<img>").attr("src",photo.media.m.replace("_m.","_"+photo.quality+".")).attr("id",photo.id).appendTo("#images");
-  $("<img>").attr("src", photo.media.m.replace("_m.","_q.")).appendTo($("#tableImages")).wrap('<tr id =\"'+photo.id+1000+'\">').wrap('<td>');
-  $('<td>'+photo.title+'</td>').appendTo("#"+photo.id+1000);
-  $('<td>'+photo.date_taken+'</td>').appendTo("#"+photo.id+1000);
-  $('<td>'+photo.author+'</td>').appendTo("#"+photo.id+1000);
-  $('</br>').appendTo("#images");
+  // $("<img>").attr("src", photo.media.m.replace("_m.","_q.")).appendTo($("#tableImagesBody")).wrap('<tr id =\"'+photo.id+1000+'\">').wrap('<td>');
+  // $('<td>'+photo.title+'</td>').appendTo("#"+photo.id+1000);
+  // $('<td>'+photo.date_taken+'</td>').appendTo("#"+photo.id+1000);
+  // $('<td>'+photo.author+'</td>').appendTo("#"+photo.id+1000);
+  // $('</br>').appendTo("#images");
   $('#'+photo.id).on("click",this,function(){
     dialogInformation(photo);
   });
