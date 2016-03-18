@@ -137,8 +137,10 @@ function addPic(photo){
     photo - the object containning all the information to append to the img balise
 */
 function dialogInformation(photo){
-  $('<div>').attr("class","ui-dialog").dialog({
+  var information = $('<div><p>Author:'+photo.author+'</p><p>Date:'+photo.date_taken+'</p></div>');
+    information.appendTo('<div>').attr("class","ui-dialog").dialog({
     title: photo.title,
+    p : photo.description,
     position:{
       of:$('#'+photo.id)
     }});
