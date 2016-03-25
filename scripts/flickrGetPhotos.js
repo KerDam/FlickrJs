@@ -137,11 +137,24 @@ function addPic(photo){
     photo - the object containning all the information to append to the img balise
 */
 function dialogInformation(photo){
-  var information = $('<div><p>Author:'+photo.author+'</p><p>Date:'+photo.date_taken+'</p></div>');
+    var information = $('<div><p>Author:'+photo.author+'</p><p>Date:'+photo.date_taken+'</p><a href="maps.html?id='+getId(photo)+'"><p>maps</p></a></div>');
     information.appendTo('<div>').attr("class","ui-dialog").dialog({
     title: photo.title,
     p : photo.description,
     position:{
       of:$('#'+photo.id)
     }});
+}
+
+/*
+	Function: getId
+
+       	This function will return the ID of a photo, this function will be used to get maps informations of the photo
+
+	Parameters:
+	photo - the photo you want the id 
+*/
+function getId(photo){
+	var splited =  photo.media.m.split("_");
+	return splited[1];
 }
