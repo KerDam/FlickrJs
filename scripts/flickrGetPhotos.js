@@ -64,21 +64,21 @@ function removeImages(){
 */
 function getJSON (city, numberOfImages, qualityImages){
   $.ajax({
-    url: "http://api.flickr.com/services/feeds/photos_public.gne",
+    url: "https://api.flickr.com/services/rest/?method=flickr.photos.search",
     type:'GET',
     dataType:'jsonp',
     jsonp:'jsoncallback',
-    data: 'tags='+city+'&tagmode=any&format=json',
+    data: 'api_key=7f08914a17a2acd4ddbc14a70ba1df7a&format=json&tags='+city+'&extras=media,geo,date_taken,url_m,description,owner_name',
     success:function( data) {
       var i = 0;
       var imgArray = [];
-      $.each( data.items, function(i, item ) {
+      $.each( data.photos.photo, function(i, item ) {
        if (i < numberOfImages){ 
         item.id = i;
         item.quality = qualityImages;
         addPic(item);
         imgArray.push([ 
-          "<img src ='" + item.media.m.replace("_m.","_q.") + "''>", 
+          "<img src ='" + item.url_m.replace("_m.","_q.") + "''>", 
           item.title, 
           item.date_taken, 
           item.author
@@ -117,7 +117,7 @@ function getJSON (city, numberOfImages, qualityImages){
     <dialogInformation>
 */
 function addPic(photo){
-  $("<img>").attr("src",photo.media.m.replace("_m.","_"+photo.quality+".")).attr("id",photo.id).appendTo("#images");
+  $("<img>").attr("src",photo.url_m.replace("_m.","_"+photo.quality+".")).attr("id",photo.id).appendTo("#images");
   // $("<img>").attr("src", photo.media.m.replace("_m.","_q.")).appendTo($("#tableImagesBody")).wrap('<tr id =\"'+photo.id+1000+'\">').wrap('<td>');
   // $('<td>'+photo.title+'</td>').appendTo("#"+photo.id+1000);
   // $('<td>'+photo.date_taken+'</td>').appendTo("#"+photo.id+1000);
@@ -155,6 +155,6 @@ function dialogInformation(photo){
 	photo - the photo you want the id 
 */
 function getId(photo){
-	var splited =  photo.media.m.split("_");
+	var splited =  photo.url_m.split("_");
 	return splited[1];
 }

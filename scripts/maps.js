@@ -1,9 +1,9 @@
-$(document).ready(function(){
-	var coordonates = getCoordonates(getURLParameter("id"));
-	if (coordonates != null ){
-		var mymap = L.map('mapid').setView([coordonates.longitude, coordonates.lattitude], 13);
-		var marker = L.marker([coordonates.longitude,coordonates.lattitude]).addTo(mymap);
-	}
+$('document').ready(function(){
+var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 18,
+}).addTo(mymap);
 });
 
 
@@ -29,8 +29,8 @@ function getCoordonates(id){
 		return null;
 	}
 	else {
-		coordonate.push(data.longitude);
-		coordonate.push(data.lattitude);
+		coordonate[0] = data.longitude;
+		coordonate[1] = data.lattitude;
         }
     },
     fail:function(){
