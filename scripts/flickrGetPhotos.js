@@ -102,16 +102,6 @@ function getJSON (city, numberOfImages, qualityImages){
 
       table.fnClearTable();
       table.fnAddData(imgArray);
-
-      // $('#tableImages').DataTable({
-      //   data: imgArray,
-      //   columns: [
-      //     { title: "Photo"},
-      //     { title: "Name"},
-      //     { title: "Date"},
-      //     { title: "Author"}
-      //   ]
-      // });
     },
     error:function(){
       alert("fail");

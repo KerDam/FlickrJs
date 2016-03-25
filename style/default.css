@@ -29,4 +29,6 @@ main {
 
 #images img {
 	margin-bottom: 20px;
+	margin-left: 12px;
+	vertical-align: top;
 }
