@@ -1,3 +1,5 @@
+var table
+
 $('document').ready(function(){
 
   // onglets
@@ -30,6 +32,17 @@ $('document').ready(function(){
     photos = getJSON($('#inputCity').val(),
       $('#nbImages').val(),
       $('#quality').val());
+  });
+  
+  // table view
+  table = $('#tableImages').dataTable({
+    "autoWidth": false,
+    columns: [
+      { title: "Photo"},
+      { title: "Name"},
+      { title: "Date"},
+      { title: "Author"}
+    ]
   });
 
 });
@@ -86,15 +99,19 @@ function getJSON (city, numberOfImages, qualityImages){
         i++;
         }
       });
-      $('#tableImages').DataTable({
-        data: imgArray,
-        columns: [
-          { title: "Photo"},
-          { title: "Name"},
-          { title: "Date"},
-          { title: "Author"}
-        ]
-      });
+
+      table.fnClearTable();
+      table.fnAddData(imgArray);
+
+      // $('#tableImages').DataTable({
+      //   data: imgArray,
+      //   columns: [
+      //     { title: "Photo"},
+      //     { title: "Name"},
+      //     { title: "Date"},
+      //     { title: "Author"}
+      //   ]
+      // });
     },
     error:function(){
       alert("fail");
