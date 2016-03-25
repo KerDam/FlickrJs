@@ -13,8 +13,7 @@ main {
 
 	.search__label,
 	.search__input,
-	.search__select,
-	.search__submit {
+	.search__select {
 		margin: 6px 0;
 		font-size: 16px;
 		color: #333;
@@ -22,6 +21,10 @@ main {
 
 	.search__label::after {
 		content: ' : ';
+	}
+
+	.search__submit {
+		width: 26px;
 	}
 
 #images img {
