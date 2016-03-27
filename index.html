@@ -2,11 +2,13 @@
 <head>
   <meta charset="utf-8">
 
+  <script type="text/javascript" src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
   <script type="text/javascript" src="scripts/jquery-1.12.1.min.js"></script>
   <script type="text/javascript" src="scripts/jquery-ui.js"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
   <script type="text/javascript" src="scripts/flickrGetPhotos.js"></script>
 
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
   <link href="style/jquery-ui.css" rel="stylesheet"></link>
   <link href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" rel="stylesheet"></link>
   <link href="style/default.css" rel="stylesheet"></link>
@@ -34,6 +36,9 @@
 
       <img class="search__submit" id="submitCity" src="style/search.png"/>
     </div>
+
+  <div id="mapid" style="height:300px">
+  </div>
 
     <div id="tabs">
       <ul>

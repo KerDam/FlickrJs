@@ -1,167 +1,187 @@
-var table
-
+var mymap = null;
+var table;
 $('document').ready(function(){
 
-  // onglets
-  $('#tabs').tabs();
+    // onglets
+    $('#tabs').tabs();
 
-  // auto completion
-  $('#inputCity').autocomplete({
-    source: function(request, response){
-      var url = "http://infoweb-ens/~jacquin-c/codePostal/commune.php";
-      $.getJSON(url + "?commune=" + request.term + "&maxRows=100",  function( data ){
-        response($.map(data, function (v, k) {
-          return {
-            label: v.Ville
-          };
-        }));
-      });
-    },
-    select: function(event, ui){
-      removeImages();
-      photos = getJSON(ui.item.value,
-        $('#nbImages').val(),
-        $('#quality').val()
-      );
-    }
-  });
+    // auto completion
+    $('#inputCity').autocomplete({
+        source: function(request, response){
+            var url = "http://infoweb-ens/~jacquin-c/codePostal/commune.php";
+            $.getJSON(url + "?commune=" + request.term + "&maxRows=100",  function( data ){
+                response($.map(data, function (v, k) {
+                    return {
+                        label: v.Ville
+                    };
+                }));
+            });
+        },
+        select: function(event, ui){
+            removeImages();
+            photos = getJSON(ui.item.value,
+                    $('#nbImages').val(),
+                    $('#quality').val()
+                    );
+        }
+    });
 
-  // recherche
-  $('#submitCity').on("click",this,function(){
-    removeImages();
-    photos = getJSON($('#inputCity').val(),
-      $('#nbImages').val(),
-      $('#quality').val());
-  });
-  
-  // table view
-  table = $('#tableImages').dataTable({
-    "autoWidth": false,
-    columns: [
-      { title: "Photo"},
-      { title: "Name"},
-      { title: "Date"},
-      { title: "Author"}
-    ]
-  });
+    // recherche
+    $('#submitCity').on("click",this,function(){
+        removeImages();
+        photos = getJSON($('#inputCity').val(),
+                $('#nbImages').val(),
+                $('#quality').val());
+    });
+
+    // table view
+    table = $('#tableImages').dataTable({
+        "autoWidth": false,
+        columns: [
+        { title: "Photo"},
+        { title: "Name"},
+        { title: "Date"},
+        { title: "Author"}
+        ]
+    });
 
 });
 
 /* 
-    Function: removeImages
+   Function: removeImages
 
-    Will remove all the useless balise before getting images from Flickr
+   Will remove all the useless balise before getting images from Flickr
 
 */
 function removeImages(){
-  $("td").remove();
-  $("tr").remove();
-  $("#images").children().remove();
-  $(".ui-dialog").remove();
-}
-
-/*
-    Function: getJSON
-
-    Will get a json file from the flickr api and parse it so it can add photo
-
-    Parameters:
-        city - the name of the city you want to search
-        numberOfImages - the maximum of Images you want
-        quality - the differents quality are m(bad) q(high) z(very high)
-
-    Returns:
-        At the end this function will call addPic
-    See Also:
-        <addPic>
-*/
-function getJSON (city, numberOfImages, qualityImages){
-  $.ajax({
-    url: "https://api.flickr.com/services/rest/?method=flickr.photos.search",
-    type:'GET',
-    dataType:'jsonp',
-    jsonp:'jsoncallback',
-    data: 'api_key=7f08914a17a2acd4ddbc14a70ba1df7a&format=json&tags='+city+'&extras=media,geo,date_taken,url_m,description,owner_name',
-    success:function( data) {
-      var i = 0;
-      var imgArray = [];
-      $.each( data.photos.photo, function(i, item ) {
-       if (i < numberOfImages){ 
-        item.id = i;
-        item.quality = qualityImages;
-        addPic(item);
-        imgArray.push([ 
-          "<img src ='" + item.url_m.replace("_m.","_q.") + "''>", 
-          item.title, 
-          item.date_taken, 
-          item.author
-        ]);
-        i++;
-        }
-      });
-
-      table.fnClearTable();
-      table.fnAddData(imgArray);
-    },
-    error:function(){
-      alert("fail");
+    if (mymap != null){
+        mymap.remove();
     }
-  });
+    $('#mapid').children().remove();
+    $("#images").children().remove();
+    $(".ui-dialog").remove();
 }
 
 /*
-    Function: addPic
+   Function: getJSON
 
-    This will append a <img> balise to the document
+   Will get a json file from the flickr api and parse it so it can add photo
 
-    Parameters: 
-    photo - the object photo that contains the informations necessary to create the balise
+   Parameters:
+   city - the name of the city you want to search
+   numberOfImages - the maximum of Images you want
+   quality - the differents quality are m(bad) q(high) z(very high)
 
-    Return:
-    call the function dialogInformation
+   Returns:
+   At the end this function will call addPic
+   See Also:
+   <addPic>
+   */
+function getJSON (city, numberOfImages, qualityImages){
+    $.ajax({
+        url: "https://api.flickr.com/services/rest/?method=flickr.photos.search",
+        type:'GET',
+        dataType:'jsonp',
+        jsonp:'jsoncallback',
+        data: 'api_key=7f08914a17a2acd4ddbc14a70ba1df7a&format=json&tags='+city+'&extras=media,geo,date_taken,url_q,description,owner_name&per_page='+numberOfImages,
+        success:function( data) {
+            var i = 0;
+            var imgArray = [];
+            var mapSet = false;
+            $.each( data.photos.photo, function(i, item ) {
+                if (i < numberOfImages){ 
+                    if (item.latitude != 0 && item.longitude != 0){
+                        if (mapSet != true){
+                            mapInit([item.latitude, item.longitude]);
+                            mapSet = true;
+                        }
+                        addToMap([item.latitude, item.longitude], '<h2>'+item.title+'<h2><img src="'+item.url_q+'"></img>');
+                    }
 
-    See Also:
-    <dialogInformation>
-*/
+                    item.quality = qualityImages;
+                    addPic(item);
+                    imgArray.push([ 
+                            "<img src ='" + item.url_q + "''>", 
+                            item.title, 
+                            item.datetaken, 
+                            item.ownername
+                    ]);
+                    i++;
+                }
+            });
+
+            table.fnClearTable();
+            table.fnAddData(imgArray);
+        },
+        error:function(){
+            alert("fail");
+        }
+    });
+}
+
+/*
+   Function: addPic
+
+   This will append a <img> balise to the document
+
+   Parameters: 
+   photo - the object photo that contains the informations necessary to create the balise
+
+   Return:
+   call the function dialogInformation
+
+   See Also:
+   <dialogInformation>
+   */
 function addPic(photo){
-  $("<img>").attr("src",photo.url_m.replace("_m.","_"+photo.quality+".")).attr("id",photo.id).appendTo("#images");
-  // $("<img>").attr("src", photo.media.m.replace("_m.","_q.")).appendTo($("#tableImagesBody")).wrap('<tr id =\"'+photo.id+1000+'\">').wrap('<td>');
-  // $('<td>'+photo.title+'</td>').appendTo("#"+photo.id+1000);
-  // $('<td>'+photo.date_taken+'</td>').appendTo("#"+photo.id+1000);
-  // $('<td>'+photo.author+'</td>').appendTo("#"+photo.id+1000);
-  // $('</br>').appendTo("#images");
-  $('#'+photo.id).on("click",this,function(){
-    dialogInformation(photo);
-  });
+    $("<img>").attr("src",photo.url_q.replace("_q.","_"+photo.quality+".")).attr("id",photo.id).appendTo("#images");
+    $('#'+photo.id).on("click",this,function(){
+        dialogInformation(photo);
+    });
 }
 
 /*
-    Function: dialogInformation
+   Function: dialogInformation
 
-    A function that will append a jquery ui dialog to the document on the specific photo
+   A function that will append a jquery ui dialog to the document on the specific photo
 
-    Parameters: 
-    photo - the object containning all the information to append to the img balise
-*/
-function dialogInformation(photo){
-    var information = $('<div><p>Author:'+photo.author+'</p><p>Date:'+photo.date_taken+'</p><a href="maps.html?id='+getId(photo)+'"><p>maps</p></a></div>');
-    information.appendTo('<div>').attr("class","ui-dialog").dialog({
-    title: photo.title,
-    p : photo.description,
-    position:{
-      of:$('#'+photo.id)
-    }});
+   Parameters: 
+   photo - the object containning all the information to append to the img balise
+   */
+        function dialogInformation(photo){
+            var information = $('<div><p>Author:'+photo.author+'</p><p>Date:'+photo.date_taken+'</p></div>');
+            information.appendTo('<div>').attr("class","ui-dialog").dialog({
+                title: photo.title,
+                p : photo.description,
+                position:{
+                    of:$('#'+photo.id)
+                }});
+        }
+/*
+   Function: mapInit
+   This function will initiate the map
+
+   Parameters:
+   coordonates - the coordonates to initialise the map
+   */
+function mapInit(coordonates){
+    mymap = L.map('mapid').setView(coordonates, 11);
+    L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 18,
+            }).addTo(mymap);
 }
 
 /*
-	Function: getId
+   Function: addToMap
+   this function will add a marker to the map
 
-       	This function will return the ID of a photo, this function will be used to get maps informations of the photo
+   Parameters: 
+   coordonates - The coordonates of the marker
+   informations - The informations that will be diplayed
 
-	Parameters:
-	photo - the photo you want the id 
 */
-function getId(photo){
-	var splited =  photo.url_m.split("_");
-	return splited[1];
+function addToMap(coordonates, informations){
+    var marker = L.marker(coordonates).addTo(mymap);
+    marker.bindPopup(informations).openPopup();
 }
