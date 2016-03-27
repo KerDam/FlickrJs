@@ -5,6 +5,8 @@ $('document').ready(function(){
     // onglets
     $('#tabs').tabs();
 
+    // DatePicker
+    $('#datepicker').datepicker({ dateFormat: 'yy-mm-dd' });
     // auto completion
     $('#inputCity').autocomplete({
         source: function(request, response){
@@ -78,37 +80,46 @@ function removeImages(){
    <addPic>
    */
 function getJSON (city, numberOfImages, qualityImages){
+    var date = ""
+        if ($('#datepicker').datepicker("getDate") != null ){
+            date = "&min_taken_date="+$('#datepicker').val()+" 00:00:00";
+        }
     $.ajax({
         url: "https://api.flickr.com/services/rest/?method=flickr.photos.search",
         type:'GET',
         dataType:'jsonp',
         jsonp:'jsoncallback',
-        data: 'api_key=7f08914a17a2acd4ddbc14a70ba1df7a&format=json&tags='+city+'&extras=media,geo,date_taken,url_q,description,owner_name&per_page='+numberOfImages,
+        data: 'api_key=7f08914a17a2acd4ddbc14a70ba1df7a&format=json&tags='+city+'&extras=media,geo,date_taken,url_q,description,owner_name&per_page='+numberOfImages+date,
         success:function( data) {
-            var i = 0;
-            var imgArray = [];
-            var mapSet = false;
-            $.each( data.photos.photo, function(i, item ) {
-                if (i < numberOfImages){ 
-                    if (item.latitude != 0 && item.longitude != 0){
-                        if (mapSet != true){
-                            mapInit([item.latitude, item.longitude]);
-                            mapSet = true;
+            if(data.photos.total != 0){
+                var i = 0;
+                var imgArray = [];
+                var mapSet = false;
+                $.each( data.photos.photo, function(i, item ) {
+                    if (i < numberOfImages){ 
+                        if (item.latitude != 0 && item.longitude != 0){
+                            if (mapSet != true){
+                                mapInit([item.latitude, item.longitude]);
+                                mapSet = true;
+                            }
+                            addToMap([item.latitude, item.longitude], '<h2>'+item.title+'<h2><img src="'+item.url_q+'"></img>');
                         }
-                        addToMap([item.latitude, item.longitude], '<h2>'+item.title+'<h2><img src="'+item.url_q+'"></img>');
-                    }
 
-                    item.quality = qualityImages;
-                    addPic(item);
-                    imgArray.push([ 
-                            "<img src ='" + item.url_q + "''>", 
-                            item.title, 
-                            item.datetaken, 
-                            item.ownername
-                    ]);
-                    i++;
-                }
-            });
+                        item.quality = qualityImages;
+                        addPic(item);
+                        imgArray.push([ 
+                                "<img src ='" + item.url_q + "''>", 
+                                item.title, 
+                                item.datetaken, 
+                                item.ownername
+                        ]);
+                        i++;
+                    }
+        });
+        }
+            else{
+                alert('No photos are matching');
+            }
 
             table.fnClearTable();
             table.fnAddData(imgArray);
@@ -148,15 +159,15 @@ function addPic(photo){
    Parameters: 
    photo - the object containning all the information to append to the img balise
    */
-        function dialogInformation(photo){
-            var information = $('<div><p>Author:'+photo.author+'</p><p>Date:'+photo.date_taken+'</p></div>');
-            information.appendTo('<div>').attr("class","ui-dialog").dialog({
-                title: photo.title,
-                p : photo.description,
-                position:{
-                    of:$('#'+photo.id)
-                }});
-        }
+    function dialogInformation(photo){
+        var information = $('<div><p>Author:'+photo.ownername+'</p><p>Date:'+photo.datetaken+'</p></div>');
+        information.appendTo('<div>').attr("class","ui-dialog").dialog({
+            title: photo.title,
+            p : photo.description,
+            position:{
+                of:$('#'+photo.id)
+            }});
+    }
 /*
    Function: mapInit
    This function will initiate the map
@@ -164,13 +175,14 @@ function addPic(photo){
    Parameters:
    coordonates - the coordonates to initialise the map
    */
-function mapInit(coordonates){
-    mymap = L.map('mapid').setView(coordonates, 11);
-    L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 18,
-            }).addTo(mymap);
-}
+                function mapInit(coordonates){
+                    $('#mapid').css("height","300px");
+                    mymap = L.map('mapid').setView(coordonates, 11);
+                    L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+                            attribution: '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                            maxZoom: 18,
+                            }).addTo(mymap);
+                }
 
 /*
    Function: addToMap
@@ -181,7 +193,7 @@ function mapInit(coordonates){
    informations - The informations that will be diplayed
 
 */
-function addToMap(coordonates, informations){
-    var marker = L.marker(coordonates).addTo(mymap);
-    marker.bindPopup(informations).openPopup();
-}
+            function addToMap(coordonates, informations){
+                var marker = L.marker(coordonates).addTo(mymap);
+                marker.bindPopup(informations).openPopup();
+            }
