@@ -1,0 +1,56 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage{comment} % enables the use of multi-line comments (\ifx \fi) 
+\usepackage{fullpage} % changes the margin
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{xspace}
+
+\begin{document}
+\noindent
+\large\textbf{Projet JQuery} \hfill \textbf{Damien Farce, Augustin Lacour} \\
+
+\section*{Présentation du projet}
+Le but du projet est de créer une interface WEB permettant de récupérer des photos depuis Flickr en rapport avec une ville qui est passé en paramètre
+
+L'application doit remplir plusieurs pré-requis qui sont, l'autocomplétion à partir d'une application PHP, récupération des photos en fonction de la ville qui est saisie, 2 onglets qui permettent l'affichage en tableau et l'autre en liste.
+
+\section*{Présentation des outils}
+Pour réaliser ce projet nous devons utiliser les technologies Web classiques HTML/CSS/JS et plus particuliérement JQuery qui est un framework Javascript et qui permet en autre de faire des requêtes réseaux asynchrone et fourni d'autre outils qui sont la gestion de popups, de table (trie) etc.
+De plus pour la gestion de la carte nous avons préféré utilisé Leaflet qui permet une gestion plus souple des cartes par rapport à google maps, de plus elle permet d'utiliser des cartes open-sources.
+Nous avons utiliser NaturalDocs pour générer la doc puisque son utilisation est facile et que cette utilitaire supporte plusieurs language tout en gardant la même syntaxe. 
+\subsection*{L'api Flickr}
+L'api Flickr peut renvoyer du JSON qui contient des informations suffissante pour récupérer l'url des photos ainssi que d'autre infos tels que le titre, le nom de l'auteur. 
+Il y a 2 façon d'intérargir avec l'api:
+	\begin{itemize}
+		\item Sans clé: permet seulement de rechercher des photos qui sont public, l'accés au informations est réduit et il y a une limites de photos.
+		\item Avec une clé: Donne accés à des requêtes plus avancées nottament de sélectionner les photos à partir d'une certainnes date et d'avoir les informations de géolocalisation.
+	\end{itemize}
+La clé que nous utilsons est celle d'Adrien Gennevois que nous remercion grandement. 
+
+\section*{Réalisation du projet}
+
+	\subsection*{Page HTML }
+	La page HTML contient un formulaire qui permet de sélectionnner une ville (avec autocomplétion via requête Ajax), une date pour récupérer seulement les photos qui ont été prises après cette date, la qualité de la photo (cela seras seulement disponible pour la vue en liste et non en tableau) et finalement un boutton qui permet de lancer le traitement
+	Une fois la recherche lancé une carte se \"glisse\" entre les résultat et le formulaire.
+	Un systéme permet de regarder les photos
+	\begin{itemize}
+		\item Le premier est simplement une vue où les photos sont à la suite des autres
+		\item Le second est tableau JQury qui permet de faire un tri selon différent critéres
+	\end{itemize}
+	\subsection*{Le traitement}
+	Une fois que l'utilisateur a lancé le traitement en appuyant sur le boutton de recherche, une réquête Ajax va intérroger l'API flickr pour récupérer les informations relatives au photos concernant la ville.
+	Le résultat obtenu est du JSON qui est ensuite parsé, pour chaque élément JSON qui correspond à une photo on ajoute une balise <img> dans la table ainssi que dans la vue en liste et puis un click listener est rajouter à cette balise pour que lorsque le client click un fenêtre modal apparaisse avec des informations complémentaire.
+	En paralléle de ce traitement les points identifiant les photos (si les données de géolocalisation existent) sont ajouter à la carte.
+	\subsection*{Les Problèmes}
+	L'appréhention de l'API flickr n'était pas évidente, nous premièrement opter pour l'utilisation de l'API avec clé pour ensuite passé à la public en cours de projet puisqu'il parraiser qu'elle n'apporte rien, puis lors de la finalisation du projet et la gestion de la carte nous avons remarqué l'importance d'utiliser une clé. 
+	De plus la documentation de l'API n'est pas des plus clair.
+
+\section*{Conclusion }
+Les fonctionnalitées qui étaient attendu ont été dévelloper et nous avons gérer les données de géolocalisation qui etait en bonus. Nous avons pris des libertées sur la gestion de la date puisque d'après le sujet il fallait faire ce traitement après la récupération du JSON cependant étant donné que l'option est déjà présente dans l'API et que le fait de récupérer 500 photos pour au final n'en afficher que 10 n'est pas trés Green.
+
+\section*{Fichiers joints}
+Ci-joint à ce rapport vous trouverez notre code ainssi que la documentation en HTML.
+
+\end{document}
+
