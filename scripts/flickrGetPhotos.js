@@ -102,7 +102,7 @@ function getJSON (city, numberOfImages, qualityImages){
                                 mapInit([item.latitude, item.longitude]);
                                 mapSet = true;
                             }
-                            addToMap([item.latitude, item.longitude], '<h2>'+item.title+'<h2><img src="'+item.url_q+'"></img>');
+                            addToMap([item.latitude, item.longitude], '<p>'+item.title+'</p><img src="'+item.url_q+'"></img>');
                         }
 
                         item.quality = qualityImages;
@@ -115,8 +115,8 @@ function getJSON (city, numberOfImages, qualityImages){
                         ]);
                         i++;
                     }
-        });
-        }
+            });
+            }
             else{
                 alert('No photos are matching');
             }
@@ -195,5 +195,5 @@ function addPic(photo){
 */
             function addToMap(coordonates, informations){
                 var marker = L.marker(coordonates).addTo(mymap);
-                marker.bindPopup(informations).openPopup();
+                marker.bindPopup(informations);
             }

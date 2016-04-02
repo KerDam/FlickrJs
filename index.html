@@ -2,12 +2,16 @@
 <head>
   <meta charset="utf-8">
 
+  <!-- libs -->
   <script type="text/javascript" src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
   <script type="text/javascript" src="scripts/jquery-1.12.1.min.js"></script>
   <script type="text/javascript" src="scripts/jquery-ui.js"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+
+  <!-- script -->
   <script type="text/javascript" src="scripts/flickrGetPhotos.js"></script>
 
+  <!-- style -->
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
   <link href="style/jquery-ui.css" rel="stylesheet"></link>
   <link href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" rel="stylesheet"></link>
@@ -17,6 +21,7 @@
 
   <main>
 
+    <!-- SEARCH -->
     <div class="search">
       <label class="search__label">City name</label>
       <input class="search__input" type="text" name="city" id="inputCity"></input>
@@ -33,14 +38,17 @@
         <option type="text" value="z">high</option>
       </select>
       <br/>
-      <label>Date :</label>
+
+      <label class="search__label">Date</label>
       <input type="text" value="" id="datepicker">
       <img class="search__submit" id="submitCity" src="style/search.png"/>
     </div>
 
-  <div id="mapid">
-  </div>
+    <!-- MAP -->
+    <div id="mapid">
+    </div>
 
+    <!-- RESULT -->
     <div id="tabs">
       <ul>
         <li><a href="#tabs-1">Photos view</a></li>
