@@ -10,66 +10,68 @@
 Le but du projet est de créer une interface WEB permettant d'afficher des photos provenant de Flickr en lien avec une ville. L'interface doit offrir les fonctionnalitées suivantes:
 \newline
 \begin{itemize}
-    \item \textbf{L'autocomplétion à partir d'une application PHP.}
+    \item \textbf{L'auto complétion à partir d'une application PHP.}
     \item \textbf{Récupération des photos en fonction de la ville qui est saisie.}
     \item \textbf{2 onglets qui permettent l'affichage en tableau et l'autre en liste.}
     \item \textbf{L'affichage des photos sur une carte si les informations de géolocalisation sont disponible.}
-    \item \textbf{D'afficher seulement les photos qui ont été prises à partir d'une certainne date. }
+    \item \textbf{D'afficher seulement les photos qui ont été prises à partir d'une certaine date. }
     \item \textbf{Offrir le choix à l'utilisateur du nombre de photos qu'il veut afficher}
 \end{itemize}
 
 \section*{Présentation des outils}
-Pour réaliser ce projet nous devons utiliser les technologies Web classiques HTML/CSS/JS et plus particuliérement JQuery, un framework Javascript qui permet de faire des requêtes réseaux asynchrone et fourni d'autre outils tels que la gestion de popups, de table (trie) etc. 
+Pour réaliser ce projet nous devons utiliser les technologies Web classiques HTML/CSS/JS et plus particulièrement JQuery, un framework Javascript qui permet de faire des requêtes réseaux asynchrone et fourni une base à d'autres outils tels que Jquery UI (gestion de popups et d'onglets), DataTables (tri de tableau) etc. 
 \newline
 \newline
-De plus pour la gestion de la carte nous avons préféré utilisé Leaflet par rapport à Google Maps car elle permet une gestion plus souple des cartes en de permettre d'utiliser des cartes open-sources.
+De plus pour la gestion de la carte nous avons préféré utilisé la librairie Leaflet.js par rapport à Google Maps car elle permet une gestion plus souple des cartes en plus de permettre d'utiliser des cartes libres comme celles d'open street map.
 \newline
 \newline
-Pour la génération de la documentation nous avons utilisé NaturalDocs car son utilisation simple et sa compatibilité avec plusieurs languages en font un outil puissant. 
+Pour la génération de la documentation nous avons utilisé NaturalDocs car son utilisation simple et sa compatibilité avec plusieurs langages en font un outil puissant. 
 
 \subsection*{L'api Flickr}
-L'api (application programmation interface) de Flickr s'utilse en faisant des requêtes HTTP sur un serveur, les résultats sont du texte formatées en JSON ou en XML, les informations qui sont contenue dans le JSON permet de récupérer les URLS pour les images ainssi que d'autre informations intérréssantes.
+L'api (application programmation interface) de Flickr s'utilise en faisant des requêtes HTTP sur un serveur, les réponses sont en texte formaté, au choix, en JSON ou en XML et peut contenir des informations comme les URLS pour les images ainsi que d'autre informations intéressantes.
 \newline
 \newline
-Il y a 2 façon d'intérargir avec l'api:
-	\begin{itemize}
-            \item \textbf{Sans clé: permet seulement de rechercher des photos qui sont public, l'accés au informations est réduit et il y a une limites de photos.}
-            \item \textbf{Avec une clé: Donne accés à des requêtes plus avancées nottament de sélectionner les photos à partir d'une certainnes date et d'avoir les informations de géolocalisation.}
-	\end{itemize}
+Il y a 2 façon d'intéragir avec l'api:
+    \begin{itemize}
+            \item \textbf{Sans clé via des flux: permet seulement de rechercher des photos qui sont publiques, l'accès au informations est réduit et il y a une limites de résultats.}
+            \item \textbf{Avec une clé: Donne accès à des requêtes/réponses plus avancées permettant notamment de sélectionner des photos à partir d'une certaines date et d'avoir les informations de géolocalisation.}
+    \end{itemize}
 \newline 
-Nous tenons à remercier Adrien Gennevois qui nous a préter sa clé d'API.
+Nous tenons à remercier Adrien Gennevois qui nous a "prété" sa clé d'API.
 
 \section*{Réalisation du projet}
 
-	\subsection*{Page HTML }
-        La préssentation de la page HTML est un simple formulaire avec:
+    \subsection*{Page HTML }
+        La présentation de la page HTML est un simple formulaire avec:
         \newline
         \begin{itemize}
             \item \textbf{La sélection de la ville avec autocomplétion via des requêtes AJAX}
             \item \textbf{Le choix du nombre de photos à afficher}
-            \item \textbf{Le choix de la qualitée}
-            \item \textbf{Le choix d'une date (optionel)}
+            \item \textbf{Le choix de la qualité}
+            \item \textbf{Le choix d'une date (optionnel)}
         \end{itemize}
         \newline
         Une fois la recherche lancée:
         \newline
-	\begin{itemize}
+    \begin{itemize}
             \item \textbf{Une carte est affichée si des informations de géolocalisation sont disponible}
-            \item \textbf{Le premier onglet présente les images les unes à la suite des autres avec aucunne informations particulière et lorsqu'on click sur une photo une fenêtre modale s'affiche}
-            \item \textbf{Le second onglet affiche les résultat dans une table qui permet de faire des tris selon différents paramétres tels que la date, le titre etc...}
-	\end{itemize}
-	\subsection*{Le traitement}
-	Une fois que l'utilisateur a lancé le traitement en appuyant sur le boutton de recherche, une réquête Ajax va intérroger l'API flickr pour récupérer les informations relatives au photos concernant la ville. Le résultat obtenu est du JSON qui est ensuite parsé, pour chaque élément JSON:
+            \item \textbf{Le premier onglet présente les images les unes à la suite des autres avec aucune informations particulière et lorsqu'on clique sur une photo une fenêtre modale s'affiche}
+            \item \textbf{Le second onglet affiche les résultat dans une table qui permet de faire des tris selon différents paramètres tels que la date, le titre etc...}
+    \end{itemize}
+    \subsection*{Le traitement}
+    Une fois que l'utilisateur a lancé le traitement en appuyant sur le bouton de recherche, une requête Ajax va interroger l'API flickr pour récupérer les informations relatives au photos concernant la ville. Le résultat obtenu est du JSON qui est ensuite parsé, pour chaque élément JSON:
         \newline
         \begin{itemize}
             \item \textbf{Ajout d'une balise <img> dans la table et dans la vue en liste avec comme href l'url de l'image}
-            \item \textbf{Ajout d'un click listener à la balise pour gérer l'affichage de la fenêtre modale contenant de des informations suplémentaire lors du click.}
-            \item \textbf{Ajout d'un marker sur la carte si les données de géolocalisation existent, ce marker contient le nom de la photo ainssi que la photo en miniature}
+            \item \textbf{Ajout d'un click listener à la balise pour gérer l'affichage de la fenêtre modale contenant de des informations supplémentaire lors du click.}
+            \item \textbf{Ajout d'un marker sur la carte si les données de géolocalisation existent, ce marker contient le nom de la photo ainsi que la photo en miniature}
         \end{itemize}
-	\subsection*{Les Problèmes}
-        Le sujet n'était pas trés clair s'il était nécéssaire d'avoir une clé d'API pour faire le projet, ce n'est donc que lors de la gestion de la carte que nosu nous sommes rendu compte de l'importance de la clé d'API pour avoir les données de géolocalisation, ors le format des requêtes et des résultats n'est pas éxactement le même, il a donc fallut adapter le traitement du JSON.
+    \subsection*{Les Problèmes}
+        Le sujet n'était pas très clair s'il était nécessaire d'avoir une clé d'API pour faire le projet, ce n'est donc que lors de la gestion de la carte que nous nous sommes rendu compte de l'importance de la clé d'API pour avoir les données de géolocalisation, ors le format des requêtes et des résultats n'est pas exactement le même, il a donc fallut adapter le traitement du JSON.
 
 \section*{Conclusion }
-L'application que nous avons réalisé proposent toutes les fonctionnalitées qui était attendu dans le sujet + la gestion de la carte qui était en bonus et le choix de la qualité qui malgré sa faible utilité a le mérite d'être là.
+L'application que nous avons réalisé proposent toutes les fonctionnalités qui était attendu dans le sujet avec en plus la gestion de la carte qui était en bonus.
+Le choix de la qualité permet de charger les résultats plus ou moins rapidement (les photos c'est lourd). Le code est commenté et une documentation a été générée.
 \end{document}
+
 
