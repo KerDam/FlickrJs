@@ -8,4 +8,4 @@ The objective, is create a web application using JQuery, there is no backend, al
 ##How does it works
 Once the user typed the city he wants to look photos of, Ajax request will be sent to the Flick API the JSON answer is then parsed and the photos are displayed on the page
 
-[[https://github.com/KerDam/FlickrJs/tree/gh-pages/img/screen.png|alt=octocat]]
+[[https://github.com/KerDam/FlickrJs/blob/gh-pages/img/screen.png]]
